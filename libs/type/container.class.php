@@ -47,6 +47,15 @@ namespace org\octris\core\type\container {
     /**/
     {
         /**
+         * Storage flags.
+         * 
+         * @octdoc  d:container/T_READONLY, T_SHARED
+         */
+        const T_READONLY = 1;
+        const T_SHARED   = 2;
+        /**/
+        
+        /**
          * Stores container items.
          *
          * @octdoc  v:container/$container
@@ -75,7 +84,14 @@ namespace org\octris\core\type\container {
         public function __set($name, $value)
         /**/
         {
-            $this->container[$name] = $value;
+            if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
+                throw new \Exception("unable to overwrite readonly property '$name'");
+            } else {
+                $this->container[$name] = array(
+                    'value'    => $value,
+                    'readonly' => false
+                );
+            }
         }
         
         /**
@@ -85,24 +101,37 @@ namespace org\octris\core\type\container {
          * @octdoc  m:container/set
          * @param   string      $name       Name of property to set.
          * @param   mixed       $value      Value of property to set.
-         * @param   bool        $shared     Optional flag whether container should be shared between calls. This
-         *                                  flag has only effect, if $value is a callback.
+         * @param   int         $flags      Optional flags for property storage.
          */
-        public function set($name, $value, $shared = false)
+        public function set($name, $value, $flags = 0)
         /**/
         {
-            if (!$shared || !is_callable($value)) {
-                $this->container[$name] = $value;
+            if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
+                throw new \Exception("unable to overwrite readonly property '$name'");
             } else {
-                $this->container[$name] = function($instance) use ($value) {
-                    static $return = null;
-                    
-                    if (is_null($return)) {
-                        $return = $value($instance);
-                    }
-                    
-                    return $return;
-                };
+                $shared   = (($flags & self::T_SHARED) == self::T_SHARED);
+                $readonly = (($flags & self::T_READONLY) == self::T_READONLY);
+            
+                if (!$shared || !is_callable($value)) {
+                    $this->container[$name] = array(
+                        'value'    => $value,
+                        'readonly' => $readonly
+                    );
+                } else {
+                    $this->container[$name] = array(
+                        'value'    => 
+                            function($instance) use ($value) {
+                                static $return = null;
+
+                                if (is_null($return)) {
+                                    $return = $value($instance);
+                                }
+
+                                return $return;
+                            },
+                        'readonly' => $readonly
+                    );
+                }
             }
         }
         
@@ -120,11 +149,11 @@ namespace org\octris\core\type\container {
             if (!isset($this->container[$name])) {
                 throw new \Exception("container '$name' is not set!");
             } else {
-                if (is_callable($this->container[$name])) {
-                    $cb = $this->container[$name];
+                if (is_callable($this->container[$name]['value'])) {
+                    $cb = $this->container[$name]['value'];
                     $return = $cb($this);
                 } else {
-                    $return = $this->container[$name];
+                    $return = $this->container[$name]['value'];
                 }
             }
             
@@ -140,7 +169,13 @@ namespace org\octris\core\type\container {
         public function __unset($name)
         /**/
         {
-            unset($this->container[$name]);
+            if (isset($this->container[$name])) {
+                if ($this->container[$name]['readonly']) {
+                    throw new \Exception("unable to unset readonly property '$name'");
+                } else {
+                    unset($this->container[$name]);
+                }
+            }
         }
         
         /**
