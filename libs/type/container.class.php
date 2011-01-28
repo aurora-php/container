@@ -65,16 +65,6 @@ namespace org\octris\core\type {
         /**/
         
         /**
-         * Constructor.
-         *
-         * @octdoc  m:container/__construct
-         */
-        public function __construct()
-        /**/
-        {
-        }
-
-        /**
          * Set a property.
          *
          * @octdoc  m:container/__set
