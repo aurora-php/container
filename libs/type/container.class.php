@@ -35,7 +35,7 @@
  *
  */
 
-namespace org\octris\core\type\container {
+namespace org\octris\core\type {
     /**
      * Implementation of a dependency injection container as generic instanciable  datatype.
      *
