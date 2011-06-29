@@ -11,7 +11,7 @@
 
 namespace org\octris\core\type {
     /**
-     * Implementation of a dependency injection container as generic instanciable  datatype.
+     * Implementation of a dependency injection container as generic instanciable datatype.
      *
      * @octdoc      c:type/container
      * @copyright   copyright (c) 2011 by Harald Lapp
