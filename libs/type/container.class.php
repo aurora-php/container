@@ -32,7 +32,7 @@ namespace org\octris\core\type {
         /**
          * Stores container items.
          *
-         * @octdoc  v:container/$container
+         * @octdoc  p:container/$container
          * @var     array
          */
         protected $container = array();
