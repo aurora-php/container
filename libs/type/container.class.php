@@ -33,7 +33,7 @@ namespace org\octris\core\type {
          * Stores container items.
          *
          * @octdoc  p:container/$container
-         * @var     array
+         * @type    array
          */
         protected $container = array();
         /**/
