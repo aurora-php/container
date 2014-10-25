@@ -81,7 +81,7 @@ namespace octris\core\type {
                 } else {
                     $this->container[$name] = array(
                         'value'    => 
-                            function($instance) use ($value) {
+                            function ($instance) use ($value) {
                                 static $return = null;
 
                                 if (is_null($return)) {
