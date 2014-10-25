@@ -18,7 +18,6 @@ namespace octris\core\type {
      * @author      Harald Lapp <harald.lapp@gmail.com>
      */
     class container 
-    /**/
     {
         /**
          * Storage flags.
@@ -46,7 +45,6 @@ namespace octris\core\type {
          * @param   mixed       $value      Value of property to set.
          */
         public function __set($name, $value)
-        /**/
         {
             if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
                 throw new \Exception("unable to overwrite readonly property '$name'");
@@ -68,7 +66,6 @@ namespace octris\core\type {
          * @param   int         $flags      Optional flags for property storage.
          */
         public function set($name, $value, $flags = 0)
-        /**/
         {
             if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
                 throw new \Exception("unable to overwrite readonly property '$name'");
@@ -106,7 +103,6 @@ namespace octris\core\type {
          * @param   string      $name       Name of container to return.
          */
         public function __get($name)
-        /**/
         {
             $return = null;
             
@@ -131,7 +127,6 @@ namespace octris\core\type {
          * @param   string      $name       Name of container to unset.
          */
         public function __unset($name)
-        /**/
         {
             if (isset($this->container[$name])) {
                 if ($this->container[$name]['readonly']) {
@@ -149,7 +144,6 @@ namespace octris\core\type {
          * @param   string      $name       Name of container to test.
          */
         public function __isset($name)
-        /**/
         {
             return (isset($this->container[$name]));
         }
