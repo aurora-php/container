@@ -18,17 +18,17 @@ namespace octris\core\type;
  * @copyright   copyright (c) 2011 by Harald Lapp
  * @author      Harald Lapp <harald.lapp@gmail.com>
  */
-class container 
+class container
 {
     /**
      * Storage flags.
-     * 
+     *
      * @octdoc  d:container/T_READONLY, T_SHARED
      */
     const T_READONLY = 1;
     const T_SHARED   = 2;
     /**/
-    
+
     /**
      * Stores container items.
      *
@@ -37,7 +37,7 @@ class container
      */
     protected $container = array();
     /**/
-    
+
     /**
      * Set a property.
      *
@@ -56,7 +56,7 @@ class container
             );
         }
     }
-    
+
     /**
      * Set a property. This method enhance the possibility of setting properties by allowing to set shared
      * properties. This is useful to wrap closures to always return same value for the same instance of container.
@@ -73,7 +73,7 @@ class container
         } else {
             $shared   = (($flags & self::T_SHARED) == self::T_SHARED);
             $readonly = (($flags & self::T_READONLY) == self::T_READONLY);
-        
+
             if (!$shared || !is_callable($value)) {
                 $this->container[$name] = array(
                     'value'    => $value,
@@ -81,7 +81,7 @@ class container
                 );
             } else {
                 $this->container[$name] = array(
-                    'value'    => 
+                    'value'    =>
                         function ($instance) use ($value) {
                             static $return = null;
 
@@ -96,7 +96,7 @@ class container
             }
         }
     }
-    
+
     /**
      * Magic getter returns value of stored container, callbacks will be called.
      *
@@ -106,7 +106,7 @@ class container
     public function __get($name)
     {
         $return = null;
-        
+
         if (!isset($this->container[$name])) {
             throw new \Exception("container '$name' is not set!");
         } else {
@@ -117,10 +117,10 @@ class container
                 $return = $this->container[$name]['value'];
             }
         }
-        
+
         return $return;
     }
-    
+
     /**
      * Unset a container.
      *
@@ -137,7 +137,7 @@ class container
             }
         }
     }
-    
+
     /**
      * Check if a container is set
      *
