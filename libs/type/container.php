@@ -149,4 +149,3 @@ class container
         return (isset($this->container[$name]));
     }
 }
-
