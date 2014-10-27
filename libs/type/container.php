@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace octris\core\type;
+namespace Octris\Core\Type;
 
 /**
  * Implementation of a dependency injection container as generic instanciable datatype.
@@ -18,7 +18,7 @@ namespace octris\core\type;
  * @copyright   copyright (c) 2011 by Harald Lapp
  * @author      Harald Lapp <harald.lapp@gmail.com>
  */
-class container
+class Container
 {
     /**
      * Storage flags.
