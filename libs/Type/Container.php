@@ -14,7 +14,6 @@ namespace Octris\Core\Type;
 /**
  * Implementation of a dependency injection container as generic instanciable datatype.
  *
- * @octdoc      c:type/container
  * @copyright   copyright (c) 2011 by Harald Lapp
  * @author      Harald Lapp <harald.lapp@gmail.com>
  */
@@ -23,25 +22,20 @@ class Container
     /**
      * Storage flags.
      *
-     * @octdoc  d:container/T_READONLY, T_SHARED
      */
     const T_READONLY = 1;
     const T_SHARED   = 2;
-    /**/
-
+    
     /**
      * Stores container items.
      *
-     * @octdoc  p:container/$container
      * @type    array
      */
     protected $container = array();
-    /**/
-
+    
     /**
      * Set a property.
      *
-     * @octdoc  m:container/__set
      * @param   string      $name       Name of property to set.
      * @param   mixed       $value      Value of property to set.
      */
@@ -61,7 +55,6 @@ class Container
      * Set a property. This method enhance the possibility of setting properties by allowing to set shared
      * properties. This is useful to wrap closures to always return same value for the same instance of container.
      *
-     * @octdoc  m:container/set
      * @param   string      $name       Name of property to set.
      * @param   mixed       $value      Value of property to set.
      * @param   int         $flags      Optional flags for property storage.
@@ -100,7 +93,6 @@ class Container
     /**
      * Magic getter returns value of stored container, callbacks will be called.
      *
-     * @octdoc  m:container/__get
      * @param   string      $name       Name of container to return.
      */
     public function __get($name)
@@ -124,7 +116,6 @@ class Container
     /**
      * Unset a container.
      *
-     * @octdoc  m:container/__unset
      * @param   string      $name       Name of container to unset.
      */
     public function __unset($name)
@@ -141,7 +132,6 @@ class Container
     /**
      * Check if a container is set
      *
-     * @octdoc  m:container/__isset
      * @param   string      $name       Name of container to test.
      */
     public function __isset($name)
