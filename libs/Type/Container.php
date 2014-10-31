@@ -14,7 +14,7 @@ namespace Octris\Core\Type;
 /**
  * Implementation of a dependency injection container as generic instanciable datatype.
  *
- * @copyright   copyright (c) 2011 by Harald Lapp
+ * @copyright   copyright (c) 2011-2014 by Harald Lapp
  * @author      Harald Lapp <harald.lapp@gmail.com>
  */
 class Container
