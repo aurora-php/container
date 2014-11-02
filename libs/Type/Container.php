@@ -21,18 +21,17 @@ class Container
 {
     /**
      * Storage flags.
-     *
      */
     const T_READONLY = 1;
     const T_SHARED   = 2;
-    
+
     /**
      * Stores container items.
      *
      * @type    array
      */
     protected $container = array();
-    
+
     /**
      * Set a property.
      *
