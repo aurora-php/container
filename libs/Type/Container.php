@@ -57,6 +57,7 @@ class Container
      * @param   string      $name       Name of property to set.
      * @param   mixed       $value      Value of property to set.
      * @param   int         $flags      Optional flags for property storage.
+     * @return  \Octris\Core\Type\Container     Container instance.
      */
     public function set($name, $value, $flags = 0)
     {
@@ -87,6 +88,8 @@ class Container
                 );
             }
         }
+
+        return $this;
     }
 
     /**
