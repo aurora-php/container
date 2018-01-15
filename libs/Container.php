@@ -15,9 +15,9 @@ namespace Octris;
  * Implementation of a dependency injection container.
  *
  * @copyright   copyright (c) 2011-2018 by Harald Lapp
- * @author      Harald Lapp <harald.lapp@gmail.com>
+ * @author      Harald Lapp <harald@octris.org>
  */
-class Container
+class Container implements \Psr\Container\ContainerInterface
 {
     /**
      * Storage flags.
@@ -47,14 +47,7 @@ class Container
      */
     public function __set($name, $value)
     {
-        if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
-            throw new \Exception("unable to overwrite readonly property '$name'");
-        } else {
-            $this->container[$name] = [
-                'value'    => $value,
-                'readonly' => false
-            ];
-        }
+        $this->set($name, $value);
     }
 
     /**
@@ -64,12 +57,12 @@ class Container
      * @param   string      $name       Name of property to set.
      * @param   mixed       $value      Value of property to set.
      * @param   int         $flags      Optional flags for property storage.
-     * @return  \Octris\Core\Type\Container     Container instance.
+     * @return  \Octris\Container       Container instance.
      */
     public function set($name, $value, $flags = 0)
     {
-        if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
-            throw new \Exception("unable to overwrite readonly property '$name'");
+        if ($this->has($name) && $this->container[$name]['readonly']) {
+            throw new \Octris\Container\ReadOnlyException('Unable to overwrite readonly property "' . $id . '"');
         } else {
             $shared   = (($flags & self::T_SHARED) == self::T_SHARED);
             $readonly = (($flags & self::T_READONLY) == self::T_READONLY);
@@ -100,16 +93,16 @@ class Container
     }
 
     /**
-     * Magic getter returns value of stored container, callbacks will be called.
-     *
-     * @param   string      $name       Name of container to return.
+     * Get item value from container.
+     * 
+     * @param   string      $id         Id of item.
      */
-    public function __get($name)
+    public function get($id)
     {
         $return = null;
-
-        if (!isset($this->container[$name])) {
-            throw new \Exception("container '$name' is not set!");
+        
+        if (!$this->has($id)) {
+            throw new \Octris\Container\NotFoundException('Unknown identifier "' . $id . '"');
         } else {
             if (is_callable($this->container[$name]['value'])) {
                 $cb = $this->container[$name]['value'];
@@ -122,29 +115,40 @@ class Container
         return $return;
     }
 
-    /**
-     * Unset a container.
-     *
-     * @param   string      $name       Name of container to unset.
-     */
-    public function __unset($name)
+    public function __get($id)
     {
-        if (isset($this->container[$name])) {
-            if ($this->container[$name]['readonly']) {
-                throw new \Exception("unable to unset readonly property '$name'");
+        return $this->get($id);
+    }
+
+    /**
+     * Remove an item from container.
+     *
+     * @param   string      $id         Id of item to remove.
+     */
+    public function __unset($id)
+    {
+        if (isset($this->container[$id])) {
+            if ($this->container[$id]['readonly']) {
+                throw new \Octris\Container\ReadOnlyException('Unable to unset readonly property "' . $id . '"');
             } else {
-                unset($this->container[$name]);
+                unset($this->container[$id]);
             }
         }
     }
 
     /**
-     * Check if a container is set
+     * Check if an item is available in container.
      *
-     * @param   string      $name       Name of container to test.
+     * @param   string      $id         Id of item.
+     * @return  bool
      */
-    public function __isset($name)
+    public function has($id)
     {
-        return (isset($this->container[$name]));
+        return (isset($this->container[$id]));
+    }
+
+    public function __isset($id)
+    {
+        return $this->has($id);
     }
 }
