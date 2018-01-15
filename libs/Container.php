@@ -12,7 +12,7 @@
 namespace Octris;
 
 /**
- * Implementation of a dependency injection container as generic instanciable datatype.
+ * Implementation of a dependency injection container.
  *
  * @copyright   copyright (c) 2011-2018 by Harald Lapp
  * @author      Harald Lapp <harald.lapp@gmail.com>
@@ -30,7 +30,7 @@ class Container
      *
      * @type    array
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor.
@@ -50,10 +50,10 @@ class Container
         if (isset($this->container[$name]) && $this->container[$name]['readonly']) {
             throw new \Exception("unable to overwrite readonly property '$name'");
         } else {
-            $this->container[$name] = array(
+            $this->container[$name] = [
                 'value'    => $value,
                 'readonly' => false
-            );
+            ];
         }
     }
 
@@ -75,12 +75,12 @@ class Container
             $readonly = (($flags & self::T_READONLY) == self::T_READONLY);
 
             if (!$shared || !is_callable($value)) {
-                $this->container[$name] = array(
+                $this->container[$name] = [
                     'value'    => $value,
                     'readonly' => $readonly
-                );
+                ];
             } else {
-                $this->container[$name] = array(
+                $this->container[$name] = [
                     'value'    =>
                         function ($instance) use ($value) {
                             static $return = null;
@@ -92,7 +92,7 @@ class Container
                             return $return;
                         },
                     'readonly' => $readonly
-                );
+                ];
             }
         }
 
