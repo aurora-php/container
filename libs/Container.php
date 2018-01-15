@@ -22,8 +22,8 @@ class Container implements \Psr\Container\ContainerInterface
     /**
      * Storage flags.
      */
-    const T_READONLY = 1;
-    const T_SHARED   = 2;
+    const ACCESS_READONLY = 1;
+    const ACCESS_SHARED   = 2;
 
     /**
      * Stores container items.
@@ -64,8 +64,8 @@ class Container implements \Psr\Container\ContainerInterface
         if ($this->has($name) && $this->container[$name]['readonly']) {
             throw new \Octris\Container\ReadOnlyException('Unable to overwrite readonly property "' . $id . '"');
         } else {
-            $shared   = (($flags & self::T_SHARED) == self::T_SHARED);
-            $readonly = (($flags & self::T_READONLY) == self::T_READONLY);
+            $shared   = (($flags & self::ACCESS_SHARED) == self::ACCESS_SHARED);
+            $readonly = (($flags & self::ACCESS_READONLY) == self::ACCESS_READONLY);
 
             if (!$shared || !is_callable($value)) {
                 $this->container[$name] = [
