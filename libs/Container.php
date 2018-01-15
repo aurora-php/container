@@ -33,6 +33,13 @@ class Container
     protected $container = array();
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * Set a property.
      *
      * @param   string      $name       Name of property to set.
