@@ -23,7 +23,7 @@ class Container implements \Psr\Container\ContainerInterface
      * Storage flags.
      */
     const ACCESS_READONLY = 1;
-    const ACCESS_SHARED   = 2;
+    const ACCESS_SHARED = 2;
 
     /**
      * Stores container items.
@@ -40,40 +40,29 @@ class Container implements \Psr\Container\ContainerInterface
     }
 
     /**
-     * Set a property.
-     *
-     * @param   string      $name       Name of property to set.
-     * @param   mixed       $value      Value of property to set.
-     */
-    public function __set($name, $value)
-    {
-        $this->set($name, $value);
-    }
-
-    /**
      * Set a property. This method enhance the possibility of setting properties by allowing to set shared
      * properties. This is useful to wrap closures to always return same value for the same instance of container.
      *
-     * @param   string      $name       Name of property to set.
+     * @param   string      $id       Name of property to set.
      * @param   mixed       $value      Value of property to set.
      * @param   int         $flags      Optional flags for property storage.
      * @return  \Octris\Container       Container instance.
      */
-    public function set($name, $value, $flags = 0)
+    public function set($id, $value, $flags = 0)
     {
-        if ($this->has($name) && $this->container[$name]['readonly']) {
+        if ($this->has($id) && $this->container[$id]['readonly']) {
             throw new \Octris\Container\ReadOnlyException('Unable to overwrite readonly property "' . $id . '"');
         } else {
             $shared   = (($flags & self::ACCESS_SHARED) == self::ACCESS_SHARED);
             $readonly = (($flags & self::ACCESS_READONLY) == self::ACCESS_READONLY);
 
             if (!$shared || !is_callable($value)) {
-                $this->container[$name] = [
-                    'value'    => $value,
+                $this->container[$id] = [
+                    'value' => $value,
                     'readonly' => $readonly
                 ];
             } else {
-                $this->container[$name] = [
+                $this->container[$id] = [
                     'value'    =>
                         function ($instance) use ($value) {
                             static $return = null;
@@ -92,6 +81,11 @@ class Container implements \Psr\Container\ContainerInterface
         return $this;
     }
 
+    public function __set($id, $value)
+    {
+        $this->set($id, $value);
+    }
+
     /**
      * Get item value from container.
      * 
@@ -104,11 +98,11 @@ class Container implements \Psr\Container\ContainerInterface
         if (!$this->has($id)) {
             throw new \Octris\Container\NotFoundException('Unknown identifier "' . $id . '"');
         } else {
-            if (is_callable($this->container[$name]['value'])) {
-                $cb = $this->container[$name]['value'];
+            if (is_callable($this->container[$id]['value'])) {
+                $cb = $this->container[$id]['value'];
                 $return = $cb($this);
             } else {
-                $return = $this->container[$name]['value'];
+                $return = $this->container[$id]['value'];
             }
         }
 
