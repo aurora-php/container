@@ -17,5 +17,5 @@ namespace Octris\Container;
  * @copyright   copyright (c) 2018 by Harald Lapp
  * @author      Harald Lapp <harald@octris.org>
  */
-class ReadOnlyException implements \Psr\Container\ContainerExceptionInterface {
+class ReadOnlyException extends \RuntimeException implements \Psr\Container\ContainerExceptionInterface {
 }

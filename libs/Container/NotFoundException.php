@@ -17,5 +17,5 @@ namespace Octris\Container;
  * @copyright   copyright (c) 2018 by Harald Lapp
  * @author      Harald Lapp <harald@octris.org>
  */
-class NotFoundException implements \Psr\Container\NotFoundExceptionInterface {
+class NotFoundException extends \RuntimeException implements \Psr\Container\NotFoundExceptionInterface {
 }
