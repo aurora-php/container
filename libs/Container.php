@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Octris;
 
 /**
  * Implementation of a dependency injection container.
  *
- * @copyright   copyright (c) 2011-2018 by Harald Lapp
+ * @copyright   copyright (c) 2011-present by Harald Lapp
  * @author      Harald Lapp <harald@octris.org>
  */
 class Container implements \Psr\Container\ContainerInterface
@@ -30,7 +32,7 @@ class Container implements \Psr\Container\ContainerInterface
      *
      * @type    array
      */
-    protected $container = [];
+    protected array $container = [];
 
     /**
      * Constructor.
@@ -43,12 +45,12 @@ class Container implements \Psr\Container\ContainerInterface
      * Set a property. This method enhance the possibility of setting properties by allowing to set shared
      * properties. This is useful to wrap closures to always return same value for the same instance of container.
      *
-     * @param   string      $id       Name of property to set.
+     * @param   string      $id         Name of property to set.
      * @param   mixed       $value      Value of property to set.
      * @param   int         $flags      Optional flags for property storage.
-     * @return  \Octris\Container       Container instance.
+     * @return  self                    Container instance.
      */
-    public function set($id, $value, $flags = 0)
+    public function set(string $id, mixed $value, int $flags = 0): self
     {
         if ($this->has($id) && $this->container[$id]['readonly']) {
             throw new \Octris\Container\ReadOnlyException('Unable to overwrite readonly property "' . $id . '"');
@@ -81,7 +83,7 @@ class Container implements \Psr\Container\ContainerInterface
         return $this;
     }
 
-    public function __set($id, $value)
+    public function __set(string $id, mixed $value): void
     {
         $this->set($id, $value);
     }
@@ -90,11 +92,10 @@ class Container implements \Psr\Container\ContainerInterface
      * Get item value from container.
      * 
      * @param   string      $id         Id of item.
+     * @return  mixed
      */
-    public function get($id)
+    public function get(string $id): mixed
     {
-        $return = null;
-        
         if (!$this->has($id)) {
             throw new \Octris\Container\NotFoundException('Unknown identifier "' . $id . '"');
         } else {
@@ -109,7 +110,7 @@ class Container implements \Psr\Container\ContainerInterface
         return $return;
     }
 
-    public function __get($id)
+    public function __get(string $id): mixed
     {
         return $this->get($id);
     }
@@ -119,7 +120,7 @@ class Container implements \Psr\Container\ContainerInterface
      *
      * @param   string      $id         Id of item to remove.
      */
-    public function __unset($id)
+    public function __unset(string $id): void
     {
         if (isset($this->container[$id])) {
             if ($this->container[$id]['readonly']) {
@@ -136,12 +137,12 @@ class Container implements \Psr\Container\ContainerInterface
      * @param   string      $id         Id of item.
      * @return  bool
      */
-    public function has($id)
+    public function has(string $id): bool
     {
         return (isset($this->container[$id]));
     }
 
-    public function __isset($id)
+    public function __isset(string $id): bool
     {
         return $this->has($id);
     }
